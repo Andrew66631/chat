@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  # PHP Service
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./app:/var/www/html
+    ports:
+      - "8000:8000"
+    env_file: .env
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      yii-network:
+        ipv4_address: ${PHP_IP}
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+
+  # WebSocket Service
+  websocket:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: php yii chat-server/start
+    volumes:
+      - ./app:/var/www/html
+    ports:
+      - "8080:8080"
+    env_file: .env
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      yii-network:
+        ipv4_address: ${WEBSOCKET_IP}
+
+  # MySQL Service
+  mysql:
+    image: mysql:8.0
+    env_file: .env
+    ports:
+      - "${MYSQL_PORT}:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    networks:
+      yii-network:
+        ipv4_address: ${MYSQL_IP}
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+  # Nginx Service
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./app:/var/www/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      yii-network:
+        ipv4_address: ${NGINX_IP}
+
+# Volumes
+volumes:
+  mysql-data:
+    driver: local
+
+# Networks
+networks:
+  yii-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${NETWORK_SUBNET}
+          gateway: ${NETWORK_GATEWAY}

@@ -1,0 +1,15 @@
+
+CREATE DATABASE IF NOT EXISTS `chat_app` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+
+CREATE USER IF NOT EXISTS 'admin'@'%' IDENTIFIED BY 'admin';
+
+
+GRANT ALL PRIVILEGES ON `chat_app`.* TO 'admin'@'%';
+
+
+FLUSH PRIVILEGES;
+
+
+SET GLOBAL time_zone = '+00:00';
+SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';

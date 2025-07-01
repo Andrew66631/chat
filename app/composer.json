@@ -1,0 +1,38 @@
+{
+  "name": "your-vendor-name/yii2-ratchet-app",
+  "description": "Yii2 application with Ratchet WebSocket",
+  "type": "project",
+  "license": "BSD-3-Clause",
+  "require": {
+    "php": "^8.0",
+    "yiisoft/yii2": "~2.0.45",
+    "yiisoft/yii2-bootstrap5": "~2.0.3",
+    "yiisoft/yii2-swiftmailer": "~2.1.2",
+    "cboden/ratchet": "^0.4.4"
+  },
+  "require-dev": {
+    "yiisoft/yii2-debug": "~2.1.0",
+    "yiisoft/yii2-gii": "~2.2.0",
+    "symfony/var-dumper": "^5.0"
+  },
+  "config": {
+    "process-timeout": 1800,
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true
+    },
+    "fxp-asset": {
+      "enabled": false
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "app\\": ""
+    }
+  }
+}

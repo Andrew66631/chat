@@ -1,0 +1,44 @@
+# Основные исключения для Yii2
+/vendor/
+/runtime/
+/web/assets/
+
+# Файлы окружения
+.env
+.env.local
+.env.*.local
+
+# Системные файлы
+.DS_Store
+.idea/
+Thumbs.db
+
+# Логи и кэш
+*.log
+*.cache
+
+# Файлы Composer
+/composer.lock
+/composer.phar
+
+# Файлы npm/yarn
+/node_modules/
+/yarn.lock
+/package-lock.json
+
+# Тестовые файлы
+/tests/_output/
+/tests/_support/_generated/
+
+# Конфигурация IDE
+.vscode/
+.idea/
+
+# Файлы деплоя
+*.zip
+*.tar
+*.gz
+
+# Дополнительные исключения для Windows
+ehthumbs.db
+[Tt]humbs.db
