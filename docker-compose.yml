@@ -14,6 +14,8 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     networks:
       yii-network:
         ipv4_address: ${PHP_IP}
@@ -22,6 +24,10 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_DEFAULT_PASS}
 
   # WebSocket Service
   websocket:
@@ -36,6 +42,8 @@ services:
     env_file: .env
     depends_on:
       mysql:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
     networks:
       yii-network:
@@ -78,12 +86,33 @@ services:
       yii-network:
         ipv4_address: ${NGINX_IP}
 
-# Volumes
+  # RabbitMQ Service
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file: .env
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      yii-network:
+        ipv4_address: ${RABBITMQ_IP}
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_DEFAULT_VHOST: "/"
+
 volumes:
   mysql-data:
     driver: local
+  rabbitmq-data:
+    driver: local
 
-# Networks
 networks:
   yii-network:
     driver: bridge

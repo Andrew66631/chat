@@ -1,6 +1,6 @@
 {
   "name": "your-vendor-name/yii2-ratchet-app",
-  "description": "Yii2 application with Ratchet WebSocket",
+  "description": "Yii2 application with Ratchet WebSocket and RabbitMQ",
   "type": "project",
   "license": "BSD-3-Clause",
   "require": {
@@ -8,7 +8,9 @@
     "yiisoft/yii2": "~2.0.45",
     "yiisoft/yii2-bootstrap5": "~2.0.3",
     "yiisoft/yii2-swiftmailer": "~2.1.2",
-    "cboden/ratchet": "^0.4.4"
+    "cboden/ratchet": "^0.4.4",
+    "php-amqplib/php-amqplib": "^3.2",
+    "yiisoft/yii2-queue": "^2.3"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.1.0",
